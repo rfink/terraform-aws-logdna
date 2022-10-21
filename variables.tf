@@ -44,3 +44,9 @@ variable "log_subscription_filter" {
   type        = string
   description = "The name for the Cloudwatch Log subscription filter."
 }
+
+variable "function_name" {
+  type        = string
+  default     = "logdna_cloudwatch"
+  description = "Lambda function name"
+}

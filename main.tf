@@ -16,18 +16,18 @@ resource "aws_iam_role_policy" "lambda_container_policy" {
 
 /* Lambda function */
 resource "aws_lambda_function" "lambda_stream" {
-  function_name    = "logdna_cloudwatch"
+  function_name    = "${var.function_name}"
   handler          = "index.handler"
   runtime          = "nodejs14.x"
   filename         = "${path.module}/lambda/stream_to_logdna.zip"
   source_code_hash = filebase64sha256("${path.module}/lambda/stream_to_logdna.zip")
-  role             = aws_iam_role.lambda_execute_role.arn
+  role             = "${aws_iam_role.lambda_execute_role.arn}"
 
   environment {
     variables = {
-      LOGDNA_KEY       = var.log_dna_key
-      ENVIRONMENT      = var.environment
-      APPLICATION_NAME = var.application_name
+      LOGDNA_KEY       = "${var.log_dna_key}"
+      ENVIRONMENT      = "${var.environment}"
+      APPLICATION_NAME = "${var.application_name}"
     }
   }
 
@@ -38,17 +38,17 @@ resource "aws_lambda_function" "lambda_stream" {
 
 resource "aws_lambda_permission" "allow_cloudwatch" {
   action        = "lambda:InvokeFunction"
-  function_name = aws_lambda_function.lambda_stream.function_name
+  function_name = "${aws_lambda_function.lambda_stream.function_name}"
   principal     = "logs.${var.region}.amazonaws.com"
-  source_arn    = var.log_group_arn
+  source_arn    = "${var.log_group_arn}"
 }
 
 /* Log subscription filter */
 resource "aws_cloudwatch_log_subscription_filter" "test_lambdafunction_logfilter" {
-  name            = var.log_subscription_filter
-  log_group_name  = var.log_group_name
-  filter_pattern  = var.filter_pattern
-  destination_arn = aws_lambda_function.lambda_stream.arn
+  name            = "${var.log_subscription_filter}"
+  log_group_name  = "${var.log_group_name}"
+  filter_pattern  = "${var.filter_pattern}"
+  destination_arn = "${aws_lambda_function.lambda_stream.arn}"
   distribution    = "ByLogStream"
 
   depends_on = [aws_lambda_permission.allow_cloudwatch]
