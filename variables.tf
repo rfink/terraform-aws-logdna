@@ -50,3 +50,9 @@ variable "function_name" {
   default     = "logdna_cloudwatch"
   description = "Lambda function name"
 }
+
+variable "runtime" {
+  type        = string
+  default     = "nodejs18.x"
+  description = "Nodejs runtime"
+}
