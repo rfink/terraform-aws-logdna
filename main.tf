@@ -7,7 +7,7 @@ resource "aws_iam_role" "lambda_execute_role" {
 
 resource "aws_iam_role_policy" "lambda_container_policy" {
   role   = aws_iam_role.lambda_execute_role.id
-  policy = templatefile("${path.module}/policy/logdna_lambda_stream_policy.json")
+  policy = templatefile("${path.module}/policy/logdna_lambda_stream_policy.json", {})
 }
 
 /* Lambda function */
