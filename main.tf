@@ -5,13 +5,9 @@ resource "aws_iam_role" "lambda_execute_role" {
   force_detach_policies = true
 }
 
-data "template_file" "lambda_stream_policy" {
-  template = file("${path.module}/policy/logdna_lambda_stream_policy.json")
-}
-
 resource "aws_iam_role_policy" "lambda_container_policy" {
   role   = aws_iam_role.lambda_execute_role.id
-  policy = data.template_file.lambda_stream_policy.rendered
+  policy = templatefile("${path.module}/policy/logdna_lambda_stream_policy.json")
 }
 
 /* Lambda function */
